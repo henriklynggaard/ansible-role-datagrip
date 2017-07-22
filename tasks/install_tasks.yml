@@ -19,7 +19,7 @@
   get_url:
     url: "{{ datagrip_plugin_download_mirror }}{{ item }}"
     dest: "{{ datagrip_download_directory }}"
-  register: datagrip_plugins
+  register: datagrip_plugins_downloaded
   with_items: "{{ datagrip_plugins }}"
 
 - name: Install datagrip
@@ -33,7 +33,7 @@
   unarchive:
     src: "{{ item.dest }}"
     dest: "{{ datagrip_location }}/plugins"
-  with_items: "{{ datagrip_plugins.results }}"
+  with_items: "{{ datagrip_plugins_downloaded.results }}"
 
 - name: Create datagrip desktop entry
   template:

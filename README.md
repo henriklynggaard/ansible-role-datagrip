@@ -20,16 +20,18 @@ Role Variables
     datagrip_plugin_download_mirror: "https://plugins.jetbrains.com/plugin/download?updateId="
     datagrip_plugins: []
     datagrip_download_directory: /tmp
-    datagrip_install_directory: "{{ ansible_env['HOME'] }}/Tools"
+    datagrip_user_dir: "~{{ (datagrip_install_user is defined) | ternary(datagrip_install_user, ansible_user_id) }}"
+    datagrip_install_directory: "{{ datagrip_user_dir | expanduser }}/Tools"
+    datagrip_install_user: <undefined>
 
     # calculated
     datagrip_install_file: "datagrip-{{ datagrip_version }}.tar.gz"
     datagrip_download_url: "{{ datagrip_download_mirror }}{{ datagrip_install_file }}"
     datagrip_location: "{{ datagrip_install_directory }}/DataGrip-{{ datagrip_version }}"
-    datagrip_desktop_file_location: "{{ ansible_env['HOME'] }}/.local/share/applications/datagrip-{{ datagrip_version }}.desktop"
+    datagrip_desktop_file_location: "{{ datagrip_user_dir | expanduser  }}/.local/share/applications/datagrip-{{ datagrip_version }}.desktop"
 
-datagrip_plugins is a list of names which get appended to datagrip_plugin_download_mirror to form a full download  
-
+* datagrip_plugins is a list of names which get appended to datagrip_plugin_download_mirror to form a full download  
+* Defining datagrip_install_user allows the role to install under a different user, however become is required 
 
 Dependencies
 ------------
@@ -77,4 +79,5 @@ MIT
 Change log
 ----------
 
+* 1.1: Allow installation under another user
 * 1.0: Initial version
