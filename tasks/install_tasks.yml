@@ -1,0 +1,41 @@
+---
+
+- name: install tar on Fedora 24
+  dnf:
+    name: tar
+    state: present
+  when: ansible_distribution == "Fedora" and ansible_distribution_major_version == "24"
+
+- name: Create directories for datagrip
+  file:
+    path: "{{ item }}"
+    state: directory
+  with_items:
+  - "{{ datagrip_download_directory }}"
+  - "{{ datagrip_install_directory }}"
+  - "{{ datagrip_desktop_file_location | dirname }}"
+
+- name: Download datagrip plugins
+  get_url:
+    url: "{{ datagrip_plugin_download_mirror }}{{ item }}"
+    dest: "{{ datagrip_download_directory }}"
+  register: datagrip_plugins
+  with_items: "{{ datagrip_plugins }}"
+
+- name: Install datagrip
+  unarchive:
+    copy: no
+    src: "{{ datagrip_download_url}}"
+    dest: "{{ datagrip_install_directory }}"
+    creates: "{{ datagrip_location }}/bin/datagrip.sh"
+
+- name: Install datagrip Plugins
+  unarchive:
+    src: "{{ item.dest }}"
+    dest: "{{ datagrip_location }}/plugins"
+  with_items: "{{ datagrip_plugins.results }}"
+
+- name: Create datagrip desktop entry
+  template:
+    src: datagrip.desktop.j2
+    dest: "{{ datagrip_desktop_file_location }}"

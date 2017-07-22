@@ -4,11 +4,12 @@ datagrip_download_mirror: https://download.jetbrains.com/datagrip/
 datagrip_plugin_download_mirror: "https://plugins.jetbrains.com/plugin/download?updateId="
 datagrip_plugins: []
 datagrip_download_directory: /tmp
-datagrip_install_directory: "{{ ansible_env['HOME'] }}/Tools"
+datagrip_user_dir: "~{{ (datagrip_install_user is defined) | ternary(datagrip_install_user, ansible_user_id) }}"
+datagrip_install_directory: "{{ datagrip_user_dir | expanduser  }}/Tools"
 
 # calculated
 
 datagrip_install_file: "datagrip-{{ datagrip_version }}.tar.gz"
 datagrip_download_url: "{{ datagrip_download_mirror }}{{ datagrip_install_file }}"
 datagrip_location: "{{ datagrip_install_directory }}/DataGrip-{{ datagrip_version }}"
-datagrip_desktop_file_location: "{{ ansible_env['HOME'] }}/.local/share/applications/datagrip-{{ datagrip_version }}.desktop"
+datagrip_desktop_file_location: "{{ datagrip_user_dir | expanduser }}/.local/share/applications/datagrip-{{ datagrip_version }}.desktop"
