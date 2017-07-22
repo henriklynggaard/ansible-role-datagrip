@@ -28,7 +28,7 @@ def test_desktop_file_contains_right_name(File):
 
 
 def test_start_file_exists(File):
-    f = File('/root/Tools/datagrip-2017.1.5/bin/datagrip.sh')
+    f = File('/root/Tools/DataGrip-2017.1.5/bin/datagrip.sh')
 
     assert f.exists
     assert f.is_file
